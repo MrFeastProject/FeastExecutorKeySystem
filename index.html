@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Feast Executor | #1 Best Roblox Executor</title>
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
+    <link rel="icon" type="image/png" href="https://raw.githubusercontent.com/MrFeastProject/FeastExecutorOfficialKeySystem/refs/heads/main/Feast.png">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap');
@@ -195,15 +195,21 @@
         .nav-logo-icon {
             width: 42px;
             height: 42px;
-            background: linear-gradient(135deg, #00ff41, #00cc35, #009926);
             border-radius: 12px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 18px;
-            color: #000;
             box-shadow: 0 0 25px var(--green-glow);
             animation: logoGlow 3s ease-in-out infinite;
+            overflow: hidden;
+            background: transparent;
+        }
+
+        .nav-logo-icon img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 12px;
         }
 
         @keyframes logoGlow {
@@ -1002,7 +1008,7 @@
         <div class="nav-inner">
             <a href="#" class="nav-logo">
                 <div class="nav-logo-icon">
-                    <i class="fa-solid fa-bolt"></i>
+                    <img src="https://raw.githubusercontent.com/MrFeastProject/FeastExecutorOfficialKeySystem/refs/heads/main/Feast.png" alt="Feast Executor Logo">
                 </div>
                 <div class="nav-logo-text">Feast<span>Executor</span></div>
             </a>
@@ -1591,4 +1597,4 @@
         window.addEventListener('scroll', handleNavScroll);
     </script>
 </body>
-  </html>
+</html>
