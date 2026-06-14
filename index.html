@@ -1,0 +1,1594 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Feast Executor | #1 Best Roblox Executor</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg-primary: #0a0f0a;
+            --bg-secondary: #0d140d;
+            --bg-card: #111811;
+            --bg-card-hover: #152015;
+            --green: #00ff41;
+            --green-dark: #00cc35;
+            --green-darker: #009926;
+            --green-glow: rgba(0, 255, 65, 0.25);
+            --green-glow-strong: rgba(0, 255, 65, 0.5);
+            --text: #e8e8e8;
+            --text-secondary: #999;
+            --text-muted: #666;
+            --border: rgba(0, 255, 65, 0.12);
+            --border-hover: rgba(0, 255, 65, 0.3);
+            --red: #ff4444;
+            --red-glow: rgba(255, 68, 68, 0.3);
+            --yellow: #ffd700;
+            --orange: #ff8c00;
+            --radius: 16px;
+            --radius-sm: 10px;
+            --radius-lg: 24px;
+            --shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+            --shadow-lg: 0 16px 48px rgba(0, 0, 0, 0.6);
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg-primary);
+            color: var(--text);
+            min-height: 100vh;
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        /* ============ АНИМИРОВАННЫЙ ФОН ============ */
+        .bg-layer {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        .bg-grid {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                linear-gradient(rgba(0, 255, 65, 0.025) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 255, 65, 0.025) 1px, transparent 1px);
+            background-size: 64px 64px;
+            mask-image: radial-gradient(ellipse 70% 70% at 50% 50%, black 30%, transparent 70%);
+        }
+
+        .bg-glow-1, .bg-glow-2, .bg-glow-3 {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(150px);
+            opacity: 0.06;
+        }
+
+        .bg-glow-1 {
+            width: 800px;
+            height: 800px;
+            background: radial-gradient(circle, #00ff41, transparent);
+            top: -300px;
+            right: -200px;
+            animation: floatGlow 25s ease-in-out infinite;
+        }
+
+        .bg-glow-2 {
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, #00cc35, transparent);
+            bottom: -200px;
+            left: -200px;
+            animation: floatGlow 30s ease-in-out infinite reverse;
+        }
+
+        .bg-glow-3 {
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, #00ff41, transparent);
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            animation: floatGlow 20s ease-in-out infinite;
+        }
+
+        @keyframes floatGlow {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            25% { transform: translate(50px, -100px) scale(1.2); }
+            50% { transform: translate(-30px, 50px) scale(0.9); }
+            75% { transform: translate(-80px, -30px) scale(1.1); }
+        }
+
+        /* Частицы */
+        .particles-container {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+        }
+
+        .particle {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background: var(--green);
+            border-radius: 50%;
+            animation: particleFloat linear infinite;
+            opacity: 0;
+            box-shadow: 0 0 6px var(--green);
+        }
+
+        @keyframes particleFloat {
+            0% {
+                transform: translateY(100vh) translateX(0);
+                opacity: 0;
+            }
+            10% {
+                opacity: 0.8;
+            }
+            90% {
+                opacity: 0.3;
+            }
+            100% {
+                transform: translateY(-10vh) translateX(100px);
+                opacity: 0;
+            }
+        }
+
+        /* ============ НАВИГАЦИЯ ============ */
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            padding: 16px 0;
+            transition: all 0.3s ease;
+            background: rgba(10, 15, 10, 0.8);
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
+            border-bottom: 1px solid transparent;
+        }
+
+        .navbar.scrolled {
+            padding: 10px 0;
+            background: rgba(10, 15, 10, 0.95);
+            border-bottom-color: var(--border);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
+        }
+
+        .nav-inner {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 32px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .nav-logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+            color: var(--text);
+        }
+
+        .nav-logo-icon {
+            width: 42px;
+            height: 42px;
+            background: linear-gradient(135deg, #00ff41, #00cc35, #009926);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            color: #000;
+            box-shadow: 0 0 25px var(--green-glow);
+            animation: logoGlow 3s ease-in-out infinite;
+        }
+
+        @keyframes logoGlow {
+            0%, 100% { box-shadow: 0 0 25px var(--green-glow); }
+            50% { box-shadow: 0 0 50px var(--green-glow-strong); }
+        }
+
+        .nav-logo-text {
+            font-size: 22px;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+            background: linear-gradient(135deg, #ffffff, #cccccc);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .nav-logo-text span {
+            background: linear-gradient(135deg, #00ff41, #00cc35);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 32px;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 15px;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .nav-links a:hover {
+            background: linear-gradient(135deg, #00ff41, #00cc35);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: linear-gradient(90deg, #00ff41, #00cc35);
+            transition: width 0.3s ease;
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        .nav-status {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 13px;
+            color: var(--text-secondary);
+            padding: 8px 16px;
+            background: rgba(0, 255, 65, 0.05);
+            border-radius: 50px;
+            border: 1px solid var(--border);
+        }
+
+        .nav-status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--green);
+            animation: statusPulse 2s ease-in-out infinite;
+        }
+
+        @keyframes statusPulse {
+            0%, 100% { box-shadow: 0 0 5px var(--green); }
+            50% { box-shadow: 0 0 15px var(--green); }
+        }
+
+        /* ============ ГЛАВНЫЙ ЭКРАН (HERO) ============ */
+        .hero {
+            position: relative;
+            z-index: 1;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 120px 32px 80px;
+            text-align: center;
+        }
+
+        .hero-content {
+            max-width: 900px;
+        }
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 20px;
+            background: linear-gradient(135deg, rgba(0,255,65,0.1), rgba(0,204,53,0.05));
+            border: 1px solid rgba(0,255,65,0.2);
+            border-radius: 50px;
+            font-size: 14px;
+            font-weight: 500;
+            color: #00ff41;
+            margin-bottom: 32px;
+            animation: fadeInUp 0.8s ease;
+        }
+
+        .hero-badge i {
+            font-size: 8px;
+            animation: statusPulse 2s ease-in-out infinite;
+        }
+
+        .hero-title {
+            font-size: 72px;
+            font-weight: 900;
+            line-height: 1.1;
+            margin-bottom: 24px;
+            letter-spacing: -2px;
+            animation: fadeInUp 0.8s ease 0.2s both;
+            background: linear-gradient(135deg, #ffffff 0%, #e0e0e0 50%, #ffffff 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero-title span {
+            background: linear-gradient(135deg, #00ff41, #00cc35, #009926, #00ff41);
+            background-size: 300% auto;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: gradientText 4s ease-in-out infinite;
+        }
+
+        @keyframes gradientText {
+            0%, 100% { background-position: 0% center; }
+            50% { background-position: 100% center; }
+        }
+
+        .hero-subtitle {
+            font-size: 20px;
+            color: var(--text-secondary);
+            margin-bottom: 48px;
+            line-height: 1.8;
+            animation: fadeInUp 0.8s ease 0.4s both;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 16px;
+            justify-content: center;
+            flex-wrap: wrap;
+            animation: fadeInUp 0.8s ease 0.6s both;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 16px 32px;
+            border: none;
+            border-radius: 50px;
+            font-family: 'Inter', sans-serif;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn i {
+            font-size: 18px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #00ff41, #00cc35, #009926);
+            background-size: 200% auto;
+            color: #000;
+            box-shadow: 0 8px 30px var(--green-glow);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 40px var(--green-glow-strong);
+            background-position: right center;
+        }
+
+        .btn-secondary {
+            background: linear-gradient(135deg, rgba(255,255,255,0.05), rgba(255,255,255,0.02));
+            color: var(--text);
+            border: 1px solid var(--border);
+            backdrop-filter: blur(10px);
+        }
+
+        .btn-secondary:hover {
+            background: linear-gradient(135deg, rgba(255,255,255,0.1), rgba(255,255,255,0.05));
+            border-color: var(--border-hover);
+            transform: translateY(-3px);
+            color: #00ff41;
+        }
+
+        .btn-lg {
+            padding: 20px 40px;
+            font-size: 18px;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* ============ СТАТИСТИКА ============ */
+        .stats-row {
+            display: flex;
+            gap: 24px;
+            justify-content: center;
+            margin-top: 80px;
+            flex-wrap: wrap;
+            animation: fadeInUp 0.8s ease 0.8s both;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, rgba(17,24,17,0.9), rgba(13,20,13,0.9));
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 24px 32px;
+            text-align: center;
+            min-width: 150px;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+
+        .stat-card:hover {
+            border-color: var(--border-hover);
+            transform: translateY(-4px);
+            box-shadow: 0 10px 40px rgba(0,255,65,0.1);
+        }
+
+        .stat-value {
+            font-size: 36px;
+            font-weight: 800;
+            background: linear-gradient(135deg, #00ff41, #00cc35);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .stat-label {
+            font-size: 13px;
+            background: linear-gradient(135deg, #999, #777);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-top: 4px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 600;
+        }
+
+        /* ============ СЕКЦИИ ============ */
+        .section {
+            position: relative;
+            z-index: 1;
+            padding: 100px 32px;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 64px;
+        }
+
+        .section-label {
+            display: inline-block;
+            padding: 8px 20px;
+            background: linear-gradient(135deg, rgba(0,255,65,0.1), rgba(0,204,53,0.05));
+            border: 1px solid rgba(0,255,65,0.2);
+            border-radius: 50px;
+            font-size: 13px;
+            font-weight: 600;
+            background: linear-gradient(135deg, #00ff41, #00cc35);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 20px;
+        }
+
+        .section-title {
+            font-size: 48px;
+            font-weight: 800;
+            letter-spacing: -1px;
+            margin-bottom: 16px;
+            background: linear-gradient(135deg, #ffffff, #e0e0e0);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .section-title span {
+            background: linear-gradient(135deg, #00ff41, #00cc35, #009926);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .section-desc {
+            font-size: 18px;
+            background: linear-gradient(135deg, #999, #777);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            max-width: 600px;
+            margin: 0 auto;
+            line-height: 1.8;
+        }
+
+        /* ============ FEATURES GRID ============ */
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 24px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .feature-card {
+            background: linear-gradient(135deg, rgba(17,24,17,0.8), rgba(13,20,13,0.8));
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 40px 32px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            backdrop-filter: blur(10px);
+        }
+
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #00ff41, #00cc35, transparent);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .feature-card:hover {
+            border-color: var(--border-hover);
+            transform: translateY(-6px);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+            background: linear-gradient(135deg, rgba(21,32,21,0.9), rgba(17,24,17,0.9));
+        }
+
+        .feature-card:hover::before {
+            opacity: 1;
+        }
+
+        .feature-icon {
+            width: 56px;
+            height: 56px;
+            background: linear-gradient(135deg, rgba(0,255,65,0.15), rgba(0,204,53,0.1));
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            color: #00ff41;
+            margin-bottom: 24px;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(0,255,65,0.2);
+        }
+
+        .feature-card:hover .feature-icon {
+            background: linear-gradient(135deg, rgba(0,255,65,0.25), rgba(0,204,53,0.15));
+            box-shadow: 0 0 30px var(--green-glow);
+            border-color: rgba(0,255,65,0.4);
+        }
+
+        .feature-title {
+            font-size: 22px;
+            font-weight: 700;
+            margin-bottom: 12px;
+            background: linear-gradient(135deg, #ffffff, #e0e0e0);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .feature-desc {
+            background: linear-gradient(135deg, #999, #777);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-size: 15px;
+            line-height: 1.7;
+        }
+
+        /* ============ KEY SYSTEM SECTION ============ */
+        .key-system-wrapper {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .key-card {
+            background: linear-gradient(135deg, rgba(17,24,17,0.9), rgba(13,20,13,0.9));
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 48px 40px;
+            position: relative;
+            overflow: hidden;
+            backdrop-filter: blur(20px);
+        }
+
+        .key-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #00ff41, #00cc35, #009926, transparent);
+            animation: scanLine 3s ease-in-out infinite;
+            background-size: 200% auto;
+        }
+
+        @keyframes scanLine {
+            0%, 100% { opacity: 0.3; background-position: 0% center; }
+            50% { opacity: 1; background-position: 100% center; }
+        }
+
+        .key-card-header {
+            text-align: center;
+            margin-bottom: 32px;
+        }
+
+        .key-card-icon {
+            width: 64px;
+            height: 64px;
+            background: linear-gradient(135deg, rgba(0,255,65,0.15), rgba(0,204,53,0.1));
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            color: #00ff41;
+            margin: 0 auto 20px;
+            border: 1px solid rgba(0,255,65,0.3);
+            box-shadow: 0 0 30px rgba(0,255,65,0.1);
+        }
+
+        .key-card-title {
+            font-size: 24px;
+            font-weight: 700;
+            background: linear-gradient(135deg, #ffffff, #e0e0e0);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 8px;
+        }
+
+        .key-card-subtitle {
+            background: linear-gradient(135deg, #999, #777);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-size: 14px;
+        }
+
+        .key-display {
+            background: linear-gradient(135deg, #000000, #0a0f0a);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            padding: 20px;
+            text-align: center;
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+        .key-text {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 28px;
+            font-weight: 700;
+            background: linear-gradient(135deg, #00ff41, #00cc35, #009926);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: 3px;
+            text-shadow: 0 0 20px var(--green-glow);
+            word-break: break-all;
+        }
+
+        .key-label {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            background: linear-gradient(135deg, #666, #888);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+
+        .key-timer {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            margin-bottom: 24px;
+            color: var(--text-secondary);
+            font-size: 14px;
+        }
+
+        .key-timer i {
+            color: #00ff41;
+        }
+
+        .key-timer-value {
+            font-family: 'JetBrains Mono', monospace;
+            background: linear-gradient(135deg, #00ff41, #00cc35);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-weight: 600;
+        }
+
+        .key-timer.warning .key-timer-value {
+            background: linear-gradient(135deg, #ff8c00, #ffd700);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .key-timer.expired .key-timer-value {
+            background: linear-gradient(135deg, #ff4444, #ff6666);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .key-timer.warning i {
+            color: #ff8c00;
+        }
+
+        .key-timer.expired i {
+            color: #ff4444;
+        }
+
+        .btn-generate {
+            width: 100%;
+            padding: 20px;
+            border: none;
+            border-radius: 50px;
+            font-family: 'Inter', sans-serif;
+            font-size: 17px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.5s ease;
+            background: linear-gradient(135deg, #00ff41, #00cc35, #009926);
+            background-size: 200% auto;
+            color: #000;
+            box-shadow: 0 8px 30px var(--green-glow);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .btn-generate:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 45px var(--green-glow-strong);
+            background-position: right center;
+        }
+
+        .btn-generate:active {
+            transform: translateY(-1px);
+        }
+
+        .btn-generate:disabled {
+            background: linear-gradient(135deg, #333, #222);
+            color: #666;
+            box-shadow: none;
+            cursor: not-allowed;
+            transform: none;
+            background-size: 100% auto;
+        }
+
+        .btn-generate i {
+            font-size: 20px;
+        }
+
+        /* Сообщения */
+        .alert {
+            padding: 16px 20px;
+            border-radius: var(--radius-sm);
+            font-size: 14px;
+            font-weight: 500;
+            margin-top: 16px;
+            display: none;
+            animation: slideDown 0.3s ease;
+            text-align: center;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .alert-success {
+            background: linear-gradient(135deg, rgba(0,255,65,0.1), rgba(0,204,53,0.05));
+            border: 1px solid rgba(0,255,65,0.3);
+            color: #00ff41;
+            display: block;
+        }
+
+        .alert-error {
+            background: linear-gradient(135deg, rgba(255,68,68,0.1), rgba(255,68,68,0.05));
+            border: 1px solid rgba(255,68,68,0.3);
+            color: #ff4444;
+            display: block;
+        }
+
+        .alert-warning {
+            background: linear-gradient(135deg, rgba(255,200,0,0.1), rgba(255,200,0,0.05));
+            border: 1px solid rgba(255,200,0,0.3);
+            color: #ffd700;
+            display: block;
+        }
+
+        /* Спиннер */
+        .spinner {
+            width: 22px;
+            height: 22px;
+            border: 3px solid rgba(0, 0, 0, 0.3);
+            border-top-color: #000;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            display: none;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .btn-generate.loading .btn-text { display: none; }
+        .btn-generate.loading .spinner { display: block; }
+        .btn-generate.loading i { display: none; }
+        .btn-generate.loading { pointer-events: none; opacity: 0.9; }
+
+        /* ============ FOOTER ============ */
+        .footer {
+            position: relative;
+            z-index: 1;
+            border-top: 1px solid var(--border);
+            padding: 40px 32px;
+            text-align: center;
+            font-size: 14px;
+        }
+
+        .footer-text {
+            background: linear-gradient(135deg, #666, #888);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .footer-links {
+            display: flex;
+            gap: 24px;
+            justify-content: center;
+            margin-bottom: 16px;
+            flex-wrap: wrap;
+        }
+
+        .footer-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            transition: all 0.3s ease;
+            background: linear-gradient(135deg, #999, #777);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .footer-links a:hover {
+            background: linear-gradient(135deg, #00ff41, #00cc35);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        /* ============ АДАПТИВНОСТЬ ============ */
+        @media (max-width: 768px) {
+            .hero-title {
+                font-size: 40px;
+            }
+            
+            .hero-subtitle {
+                font-size: 16px;
+            }
+            
+            .section-title {
+                font-size: 32px;
+            }
+            
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .key-card {
+                padding: 32px 20px;
+            }
+            
+            .key-text {
+                font-size: 20px;
+            }
+            
+            .nav-links {
+                display: none;
+            }
+            
+            .stats-row {
+                gap: 12px;
+            }
+            
+            .stat-card {
+                padding: 16px 20px;
+                min-width: 120px;
+            }
+            
+            .stat-value {
+                font-size: 24px;
+            }
+        }
+
+        /* Кастомный скроллбар */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--bg-primary);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(180deg, #00ff41, #00cc35);
+            border-radius: 3px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: linear-gradient(180deg, #00cc35, #009926);
+        }
+    </style>
+</head>
+<body>
+    <!-- Фоновые слои -->
+    <div class="bg-layer">
+        <div class="bg-grid"></div>
+        <div class="bg-glow-1"></div>
+        <div class="bg-glow-2"></div>
+        <div class="bg-glow-3"></div>
+        <div class="particles-container" id="particles"></div>
+    </div>
+
+    <!-- Навигация -->
+    <nav class="navbar" id="navbar">
+        <div class="nav-inner">
+            <a href="#" class="nav-logo">
+                <div class="nav-logo-icon">
+                    <i class="fa-solid fa-bolt"></i>
+                </div>
+                <div class="nav-logo-text">Feast<span>Executor</span></div>
+            </a>
+            <ul class="nav-links">
+                <li><a href="#features"><i class="fa-solid fa-star" style="margin-right: 6px; font-size: 12px;"></i>Возможности</a></li>
+                <li><a href="#keysystem"><i class="fa-solid fa-key" style="margin-right: 6px; font-size: 12px;"></i>Ключ-система</a></li>
+                <li><a href="#faq"><i class="fa-solid fa-circle-question" style="margin-right: 6px; font-size: 12px;"></i>FAQ</a></li>
+                <li>
+                    <span class="nav-status">
+                        <span class="nav-status-dot"></span>
+                        Онлайн
+                    </span>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Главный экран -->
+    <section class="hero" id="home">
+        <div class="hero-content">
+            <div class="hero-badge">
+                <i class="fa-solid fa-circle"></i>
+                v2.0 • Стабильный билд
+            </div>
+            <h1 class="hero-title">
+                Мощный <span>Executor</span><br>для Roblox
+            </h1>
+            <p class="hero-subtitle">
+                <i class="fa-solid fa-shield-halved"></i> Высокая защита от банов • 
+                <i class="fa-solid fa-brain"></i> FeastAIDefender<br>
+                <i class="fa-solid fa-bolt"></i> Быстрая работа скриптов • 
+                <i class="fa-solid fa-gauge-high"></i> Оптимизация для комфортной игры
+            </p>
+            <div class="hero-buttons">
+                <a href="#keysystem" class="btn btn-primary btn-lg">
+                    <i class="fa-solid fa-key"></i> Получить ключ
+                </a>
+                <a href="#features" class="btn btn-secondary btn-lg">
+                    <i class="fa-solid fa-circle-info"></i> Подробнее
+                </a>
+            </div>
+            <div class="stats-row">
+                <div class="stat-card">
+                    <div class="stat-value">2</div>
+                    <div class="stat-label"><i class="fa-solid fa-users"></i> Пользователя</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">99.9%</div>
+                    <div class="stat-label"><i class="fa-solid fa-server"></i> Uptime</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">0</div>
+                    <div class="stat-label"><i class="fa-solid fa-ban"></i> Банов сегодня</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">24ч</div>
+                    <div class="stat-label"><i class="fa-solid fa-clock"></i> Время ключа</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Возможности -->
+    <section class="section" id="features">
+        <div class="section-header">
+            <div class="section-label"><i class="fa-solid fa-star"></i> Возможности</div>
+            <h2 class="section-title">Почему <span>Feast Executor</span>?</h2>
+            <p class="section-desc">Мы создали инструмент, который обеспечивает максимальную производительность и безопасность</p>
+        </div>
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon"><i class="fa-solid fa-shield-halved"></i></div>
+                <h3 class="feature-title">FeastAIDefender</h3>
+                <p class="feature-desc">Нативная защита от банов и киков. AI-алгоритмы анализируют поведение и предотвращают обнаружение античитом Roblox.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon"><i class="fa-solid fa-bolt"></i></div>
+                <h3 class="feature-title">Быстрые скрипты</h3>
+                <p class="feature-desc">Оптимизированный движок выполнения скриптов. Мгновенная инжекция и минимальная задержка при работе.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon"><i class="fa-solid fa-fingerprint"></i></div>
+                <h3 class="feature-title">Привязка к устройству</h3>
+                <p class="feature-desc">Каждый ключ привязан к вашему устройству. Защита от передачи ключей третьим лицам.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon"><i class="fa-solid fa-gauge-high"></i></div>
+                <h3 class="feature-title">Точная оптимизация</h3>
+                <p class="feature-desc">Автоматическая настройка под ваше железо. Максимальный FPS и стабильность при использовании.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon"><i class="fa-solid fa-rotate"></i></div>
+                <h3 class="feature-title">Автообновления</h3>
+                <p class="feature-desc">Мгновенные патчи при обновлениях Roblox. Вы всегда на шаг впереди античита.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon"><i class="fa-solid fa-gem"></i></div>
+                <h3 class="feature-title">Premium скрипты</h3>
+                <p class="feature-desc">Эксклюзивная библиотека проверенных скриптов. Регулярные обновления и новые функции.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Ключ-система -->
+    <section class="section" id="keysystem">
+        <div class="section-header">
+            <div class="section-label"><i class="fa-solid fa-key"></i> Ключ-система</div>
+            <h2 class="section-title">Генерация <span>ключа</span></h2>
+            <p class="section-desc">Ключ действителен 24 часа и привязан к вашему устройству</p>
+        </div>
+        <div class="key-system-wrapper">
+            <div class="key-card">
+                <div class="key-card-header">
+                    <div class="key-card-icon">
+                        <i class="fa-solid fa-lock"></i>
+                    </div>
+                    <h3 class="key-card-title">Ваш ключ доступа</h3>
+                    <p class="key-card-subtitle"><i class="fa-solid fa-key"></i> Формат: XXXX-XXXX-XXXX-XXXX</p>
+                </div>
+
+                <!-- Отображение ключа -->
+                <div class="key-display" id="keyDisplay">
+                    <div class="key-label"><i class="fa-solid fa-ticket"></i> Текущий ключ</div>
+                    <div class="key-text" id="keyText">---- - ---- - ---- - ----</div>
+                </div>
+
+                <!-- Таймер -->
+                <div class="key-timer" id="keyTimer">
+                    <i class="fa-solid fa-hourglass-half"></i> Осталось: <span class="key-timer-value" id="timerValue">--:--:--</span>
+                </div>
+
+                <!-- Кнопка генерации -->
+                <button class="btn-generate" id="btnGenerate" onclick="generateKey()">
+                    <i class="fa-solid fa-wand-magic-sparkles"></i>
+                    <span class="btn-text">Сгенерировать ключ</span>
+                    <div class="spinner"></div>
+                </button>
+
+                <!-- Кнопка копирования -->
+                <button class="btn btn-secondary" id="btnCopy" onclick="copyKey()" style="width: 100%; margin-top: 12px; justify-content: center; display: none;">
+                    <i class="fa-solid fa-copy"></i> Копировать ключ
+                </button>
+
+                <!-- Сообщения -->
+                <div class="alert" id="alert"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ -->
+    <section class="section" id="faq">
+        <div class="section-header">
+            <div class="section-label"><i class="fa-solid fa-circle-question"></i> FAQ</div>
+            <h2 class="section-title">Частые <span>вопросы</span></h2>
+        </div>
+        <div class="features-grid" style="max-width: 900px;">
+            <div class="feature-card">
+                <div class="feature-icon"><i class="fa-solid fa-clock"></i></div>
+                <h3 class="feature-title">Как долго действует ключ?</h3>
+                <p class="feature-desc">Ключ действителен ровно 24 часа с момента генерации. После истечения срока необходимо сгенерировать новый.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon"><i class="fa-solid fa-lock"></i></div>
+                <h3 class="feature-title">Можно ли использовать ключ на другом ПК?</h3>
+                <p class="feature-desc">Нет, ключ привязан к вашему устройству по уникальному идентификатору. На другом ПК потребуется новый ключ.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon"><i class="fa-solid fa-rotate"></i></div>
+                <h3 class="feature-title">Что делать если ключ истёк?</h3>
+                <p class="feature-desc">Просто нажмите кнопку "Сгенерировать ключ" и получите новый ключ на следующие 24 часа.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon"><i class="fa-solid fa-shield-halved"></i></div>
+                <h3 class="feature-title">Это безопасно?</h3>
+                <p class="feature-desc">Да, мы используем шифрование и привязку к устройству. Ваши данные не передаются третьим лицам.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Футер -->
+    <footer class="footer">
+        <div class="footer-links">
+            <a href="#home"><i class="fa-solid fa-house"></i> Главная</a>
+            <a href="#features"><i class="fa-solid fa-star"></i> Возможности</a>
+            <a href="#keysystem"><i class="fa-solid fa-key"></i> Ключ-система</a>
+            <a href="#faq"><i class="fa-solid fa-circle-question"></i> FAQ</a>
+        </div>
+        <p class="footer-text">© 2024 Feast Executor. Все права защищены.</p>
+    </footer>
+
+    <script>
+        // ============================================
+        // КОНФИГУРАЦИЯ
+        // ============================================
+        const CONFIG = {
+            keyLength: 4,
+            keySegments: 4,
+            keyDuration: 24 * 60 * 60 * 1000,
+            storagePrefix: 'feast_',
+        };
+
+        // ============================================
+        // ГЕНЕРАЦИЯ УНИКАЛЬНОГО ID УСТРОЙСТВА
+        // ============================================
+        async function generateDeviceId() {
+            const components = [
+                navigator.hardwareConcurrency || 4,
+                navigator.deviceMemory || 4,
+                screen.colorDepth,
+                screen.width + 'x' + screen.height,
+                navigator.language,
+                new Date().getTimezoneOffset(),
+                navigator.platform,
+                navigator.userAgent.replace(/[\s\S]/g, ''),
+            ];
+
+            const raw = components.join('|');
+            const encoder = new TextEncoder();
+            const data = encoder.encode(raw);
+            const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+            const hashArray = Array.from(new Uint8Array(hashBuffer));
+            const deviceId = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+            
+            return deviceId.substring(0, 32);
+        }
+
+        // ============================================
+        // ГЕНЕРАЦИЯ КЛЮЧА
+        // ============================================
+        function generateKeyString() {
+            const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+            const segments = [];
+            
+            for (let i = 0; i < CONFIG.keySegments; i++) {
+                let segment = '';
+                for (let j = 0; j < CONFIG.keyLength; j++) {
+                    segment += chars.charAt(Math.floor(Math.random() * chars.length));
+                }
+                segments.push(segment);
+            }
+            
+            return segments.join('-');
+        }
+
+        // ============================================
+        // УПРАВЛЕНИЕ КЛЮЧАМИ В STORAGE
+        // ============================================
+        function getStorageKey(deviceId) {
+            return CONFIG.storagePrefix + 'key_' + deviceId.substring(0, 8);
+        }
+
+        function getExpiryKey(deviceId) {
+            return CONFIG.storagePrefix + 'expiry_' + deviceId.substring(0, 8);
+        }
+
+        function saveKeyToStorage(deviceId, key) {
+            const storageKey = getStorageKey(deviceId);
+            const expiryKey = getExpiryKey(deviceId);
+            const expiry = Date.now() + CONFIG.keyDuration;
+            
+            localStorage.setItem(storageKey, key);
+            localStorage.setItem(expiryKey, expiry.toString());
+        }
+
+        function getKeyFromStorage(deviceId) {
+            const storageKey = getStorageKey(deviceId);
+            const expiryKey = getExpiryKey(deviceId);
+            
+            const key = localStorage.getItem(storageKey);
+            const expiry = parseInt(localStorage.getItem(expiryKey) || '0');
+            
+            if (!key || !expiry) return null;
+            
+            if (Date.now() > expiry) {
+                clearKeyFromStorage(deviceId);
+                return null;
+            }
+            
+            return { key, expiry };
+        }
+
+        function clearKeyFromStorage(deviceId) {
+            const storageKey = getStorageKey(deviceId);
+            const expiryKey = getExpiryKey(deviceId);
+            localStorage.removeItem(storageKey);
+            localStorage.removeItem(expiryKey);
+        }
+
+        // ============================================
+        // СОСТОЯНИЕ ПРИЛОЖЕНИЯ
+        // ============================================
+        let state = {
+            deviceId: null,
+            currentKey: null,
+            expiryTime: null,
+            timerInterval: null,
+        };
+
+        // ============================================
+        // ИНИЦИАЛИЗАЦИЯ
+        // ============================================
+        async function init() {
+            state.deviceId = await generateDeviceId();
+            
+            const saved = getKeyFromStorage(state.deviceId);
+            
+            if (saved) {
+                state.currentKey = saved.key;
+                state.expiryTime = saved.expiry;
+                showKey(state.currentKey, state.expiryTime);
+                startTimer();
+                updateUI(true);
+                showAlert('✅ Ключ загружен. Действителен до: ' + formatTime(state.expiryTime), 'success');
+            } else {
+                updateUI(false);
+            }
+        }
+
+        // ============================================
+        // ГЕНЕРАЦИЯ НОВОГО КЛЮЧА
+        // ============================================
+        async function generateKey() {
+            const btn = document.getElementById('btnGenerate');
+            
+            if (state.currentKey && state.expiryTime && Date.now() < state.expiryTime) {
+                const remaining = state.expiryTime - Date.now();
+                const hours = Math.floor(remaining / (1000 * 60 * 60));
+                const minutes = Math.floor((remaining % (1000 * 60 * 60)) / (1000 * 60));
+                
+                showAlert(
+                    `⏳ Ключ ещё действителен ${hours}ч ${minutes}мин. Дождитесь истечения срока.`, 
+                    'warning'
+                );
+                
+                btn.style.transform = 'translateX(-5px)';
+                setTimeout(() => { btn.style.transform = 'translateX(5px)'; }, 100);
+                setTimeout(() => { btn.style.transform = 'translateX(-3px)'; }, 200);
+                setTimeout(() => { btn.style.transform = ''; }, 300);
+                
+                return;
+            }
+            
+            btn.classList.add('loading');
+            hideAlert();
+            
+            await new Promise(resolve => setTimeout(resolve, 1500));
+            
+            const newKey = generateKeyString();
+            const expiry = Date.now() + CONFIG.keyDuration;
+            
+            saveKeyToStorage(state.deviceId, newKey);
+            
+            state.currentKey = newKey;
+            state.expiryTime = expiry;
+            
+            showKey(newKey, expiry);
+            startTimer();
+            updateUI(true);
+            showAlert('🎉 Ключ успешно сгенерирован на 24 часа!', 'success');
+            
+            btn.classList.remove('loading');
+            
+            animateKeyGeneration();
+        }
+
+        // ============================================
+        // ОТОБРАЖЕНИЕ КЛЮЧА
+        // ============================================
+        function showKey(key, expiry) {
+            document.getElementById('keyText').textContent = key;
+            document.getElementById('keyDisplay').style.borderColor = 'rgba(0, 255, 65, 0.3)';
+        }
+
+        function hideKey() {
+            document.getElementById('keyText').textContent = '---- - ---- - ---- - ----';
+            document.getElementById('keyDisplay').style.borderColor = '';
+            document.getElementById('timerValue').textContent = '--:--:--';
+        }
+
+        // ============================================
+        // ТАЙМЕР ОБРАТНОГО ОТСЧЁТА
+        // ============================================
+        function startTimer() {
+            stopTimer();
+            updateTimer();
+            state.timerInterval = setInterval(updateTimer, 1000);
+        }
+
+        function stopTimer() {
+            if (state.timerInterval) {
+                clearInterval(state.timerInterval);
+                state.timerInterval = null;
+            }
+        }
+
+        function updateTimer() {
+            if (!state.expiryTime) return;
+            
+            const now = Date.now();
+            const remaining = state.expiryTime - now;
+            const timerElement = document.getElementById('timerValue');
+            const timerContainer = document.getElementById('keyTimer');
+            
+            if (remaining <= 0) {
+                timerElement.textContent = 'ИСТЁК';
+                timerContainer.className = 'key-timer expired';
+                stopTimer();
+                
+                setTimeout(() => {
+                    resetKey(true);
+                }, 2000);
+                
+                return;
+            }
+            
+            const hours = Math.floor(remaining / (1000 * 60 * 60));
+            const minutes = Math.floor((remaining % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((remaining % (1000 * 60)) / 1000);
+            
+            timerElement.textContent = 
+                String(hours).padStart(2, '0') + ':' +
+                String(minutes).padStart(2, '0') + ':' +
+                String(seconds).padStart(2, '0');
+            
+            if (remaining < 3600000) {
+                timerContainer.className = 'key-timer expired';
+            } else if (remaining < 10800000) {
+                timerContainer.className = 'key-timer warning';
+            } else {
+                timerContainer.className = 'key-timer';
+            }
+        }
+
+        function formatTime(timestamp) {
+            const date = new Date(timestamp);
+            return date.toLocaleString('ru-RU', {
+                day: '2-digit',
+                month: '2-digit',
+                year: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit',
+            });
+        }
+
+        // ============================================
+        // КОПИРОВАНИЕ КЛЮЧА
+        // ============================================
+        async function copyKey() {
+            if (!state.currentKey) return;
+            
+            try {
+                await navigator.clipboard.writeText(state.currentKey);
+                
+                const btn = document.getElementById('btnCopy');
+                const originalHTML = btn.innerHTML;
+                
+                btn.innerHTML = '<i class="fa-solid fa-check"></i> Скопировано!';
+                btn.style.background = 'linear-gradient(135deg, #00ff41, #00cc35)';
+                btn.style.color = '#000';
+                btn.style.borderColor = 'transparent';
+                
+                setTimeout(() => {
+                    btn.innerHTML = originalHTML;
+                    btn.style.background = '';
+                    btn.style.color = '';
+                    btn.style.borderColor = '';
+                }, 2000);
+                
+                showAlert('📋 Ключ скопирован в буфер обмена!', 'success');
+            } catch (err) {
+                showAlert('❌ Не удалось скопировать ключ', 'error');
+            }
+        }
+
+        // ============================================
+        // СБРОС КЛЮЧА
+        // ============================================
+        function resetKey(silent = false) {
+            clearKeyFromStorage(state.deviceId);
+            state.currentKey = null;
+            state.expiryTime = null;
+            
+            hideKey();
+            stopTimer();
+            updateUI(false);
+            
+            if (!silent) {
+                showAlert('🗑️ Ключ сброшен. Сгенерируйте новый.', 'warning');
+            } else {
+                showAlert('⏰ Время действия ключа истекло. Сгенерируйте новый.', 'error');
+            }
+        }
+
+        // ============================================
+        // ОБНОВЛЕНИЕ UI
+        // ============================================
+        function updateUI(hasKey) {
+            const btnGenerate = document.getElementById('btnGenerate');
+            const btnCopy = document.getElementById('btnCopy');
+            
+            if (hasKey) {
+                btnGenerate.querySelector('.btn-text').textContent = 'Перегенерировать ключ';
+                btnGenerate.querySelector('i').className = 'fa-solid fa-rotate';
+                btnCopy.style.display = 'flex';
+            } else {
+                btnGenerate.querySelector('.btn-text').textContent = 'Сгенерировать ключ';
+                btnGenerate.querySelector('i').className = 'fa-solid fa-wand-magic-sparkles';
+                btnCopy.style.display = 'none';
+            }
+        }
+
+        // ============================================
+        // СООБЩЕНИЯ
+        // ============================================
+        function showAlert(message, type) {
+            const alert = document.getElementById('alert');
+            alert.textContent = message;
+            alert.className = 'alert alert-' + type;
+            
+            clearTimeout(alert._timeout);
+            alert._timeout = setTimeout(() => {
+                hideAlert();
+            }, 6000);
+        }
+
+        function hideAlert() {
+            const alert = document.getElementById('alert');
+            alert.className = 'alert';
+            alert.textContent = '';
+        }
+
+        // ============================================
+        // АНИМАЦИИ
+        // ============================================
+        function animateKeyGeneration() {
+            const keyDisplay = document.getElementById('keyDisplay');
+            keyDisplay.style.transition = 'all 0.3s ease';
+            keyDisplay.style.boxShadow = '0 0 40px rgba(0, 255, 65, 0.4)';
+            keyDisplay.style.borderColor = 'rgba(0, 255, 65, 0.5)';
+            
+            setTimeout(() => {
+                keyDisplay.style.boxShadow = '';
+                keyDisplay.style.borderColor = 'rgba(0, 255, 65, 0.3)';
+            }, 1500);
+        }
+
+        // ============================================
+        // ЧАСТИЦЫ НА ФОНЕ
+        // ============================================
+        function createParticles() {
+            const container = document.getElementById('particles');
+            const count = 50;
+            
+            for (let i = 0; i < count; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.animationDuration = (Math.random() * 10 + 15) + 's';
+                particle.style.animationDelay = Math.random() * 15 + 's';
+                particle.style.width = (Math.random() * 3 + 1) + 'px';
+                particle.style.height = particle.style.width;
+                container.appendChild(particle);
+            }
+        }
+
+        // ============================================
+        // СКРОЛЛ НАВИГАЦИИ
+        // ============================================
+        function handleNavScroll() {
+            const navbar = document.getElementById('navbar');
+            if (window.scrollY > 50) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+        }
+
+        // ============================================
+        // ЗАПУСК
+        // ============================================
+        window.addEventListener('DOMContentLoaded', () => {
+            createParticles();
+            init();
+        });
+
+        window.addEventListener('scroll', handleNavScroll);
+    </script>
+</body>
+  </html>
